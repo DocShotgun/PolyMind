@@ -309,7 +309,16 @@
                                 shownmsg.innerHTML = loader + '<span><small> Processing image' + "</small></span>";
                             ran = true;
                             break;
+                        case 'clearmemory':
+                            break;
+                        case '':
+                            break;
                         default:
+                            if (!shownmsg)
+                                shownmsg = appendOutput(loader + '<span><small> Using custom function ' + jsondata.func + "</small></span>", false);
+                            else
+                                shownmsg.innerHTML = loader + '<span><small> Using custom function ' + jsondata.func + "</small></span>";
+                            ran = true;
                             break;
                     }
                 } 
