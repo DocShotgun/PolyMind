@@ -152,6 +152,11 @@ def chat():
             newinp = ""
             newinp += answers.strip()
 
+        # Skip GateKeeper monkeypatch
+        if user_input.strip().startswith("//"):
+            user_input = user_input.strip().removeprefix("//").strip()
+            newinp = newinp.strip().removeprefix("//").strip()
+
         complete = ["", []]
 
         for tok in infer(

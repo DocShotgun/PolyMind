@@ -119,6 +119,15 @@ def verifyFunc(result, x, input, stopstrings):
     return json.loads(content)
 
 def GateKeep(input, ip, depth=0, stream=False):
+    # Skip GateKeeper monkeypatch
+    if input.strip().startswith("//"):
+        print("Skipping GateKeeper")
+        if stream:
+            yield {"result": "null", "type": "result"}
+            return
+        else:
+            return "null"
+
     content = ""
     print("Begin streamed GateKeeper output.")
     funclist = func
