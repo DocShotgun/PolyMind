@@ -400,7 +400,7 @@
             event.preventDefault();
             const userInput = textArea.value;
             if (userInput != ""){
-                appendOutput(userInput, true);
+                appendOutput(userInput.startsWith("//") ? userInput.slice(2) : userInput, true);
                 loadingSpinner.style.display = 'block'; // Show loading spinner
                 document.querySelector('textarea[name="input"]').value = '';
                 currentmsg = appendOutput("", false, true);
