@@ -55,6 +55,9 @@ def stream():
         while True:
             yield f"data: {json.dumps(chosenfunc)}\n\n"
             yield f"data: {json.dumps(currenttoken)}\n\n"
+            for k in list(currenttoken.keys()):
+                if currenttoken[k].get("token").endswith("</s><s>"):
+                    del currenttoken[k]
             time.sleep(0.5)
 
     return Response(generate(), mimetype="text/event-stream")
