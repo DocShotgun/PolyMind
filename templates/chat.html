@@ -246,7 +246,7 @@
             
             if (userIp == jsondata.ip){
 
-                if (jsondata.func != "" && jsondata.func != "acknowledge" && (!ran || jsondata.func !=currentfunction)){
+                if (jsondata.func != "" && jsondata.func != "acknowledge" && jsondata.func != "clearmemory" && (!ran || jsondata.func !=currentfunction)){
                     var loader = `<svg class="loading-circle" viewBox="0 0 100 100">
                             <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
                             <circle class="circle" cx="50" cy="50" r="45"></circle>
@@ -308,8 +308,6 @@
                             else
                                 shownmsg.innerHTML = loader + '<span><small> Processing image' + "</small></span>";
                             ran = true;
-                            break;
-                        case 'clearmemory':
                             break;
                         default:
                             if (!shownmsg)
