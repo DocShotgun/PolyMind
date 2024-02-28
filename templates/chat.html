@@ -119,7 +119,6 @@
         }
         .loading-spinner {
             display: none;
-            margin-left: 10px;
         }
 
         .spinner-border {
@@ -129,6 +128,23 @@
             border-left-color: #007bff;
             border-radius: 50%;
             animation: rotate 1s linear infinite;
+        }
+
+        .input-wrapper {
+            flex-grow: 1;
+            margin-right: 5px;
+        }
+        .input-maxheight {
+            resize: vertical;
+            max-height: 200px;
+        }
+
+        .spinner-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        .spinner-wrapper.loading {
+            margin-right: 10px;
         }
 
         @keyframes rotate {
@@ -202,13 +218,17 @@
             <div class="col-12">
                 <form method="post">
                     <div class="input-group">
-                        <textarea name="input" class="form-control" placeholder="Type your message here..." autocomplete="off"></textarea>
+                        <div class="spinner-wrapper">
+                            <div class="loading-spinner spinner-border" role="status">
+                              <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="input-wrapper">
+                            <textarea name="input" class="form-control input-maxheight" placeholder="Type your message here..." autocomplete="off"></textarea>
+                        </div>
                         <button type="submit" class="btn btn-primary button-spacing">Send</button>
                         <button type="button" class="btn btn-secondary button-spacing" id="upload-image-button">File</button>
-                        <button type="button" class="btn btn-danger button-spacing" id="clear-button">Clear</button>
-                        <div class="loading-spinner spinner-border" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                          </div>
+                        <button type="button" class="btn btn-danger" id="clear-button">Clear</button>
                           
                     </div>
                 </form>
@@ -388,6 +408,7 @@
         const form = document.querySelector('form');
         const textArea = document.querySelector('textarea[name="input"]');
         const loadingSpinner = document.querySelector('.loading-spinner');
+        const spinnerWrapper = document.querySelector('.spinner-wrapper');
         const uploadImageButton = document.querySelector('#upload-image-button');
         const clearButton = document.querySelector('#clear-button');
 
@@ -404,6 +425,7 @@
             if (userInput != ""){
                 appendOutput(userInput.startsWith("//") ? userInput.slice(2) : userInput, true);
                 loadingSpinner.style.display = 'block'; // Show loading spinner
+                spinnerWrapper.classList.add('loading'); // Add 'loading' class to spinner wrapper
                 document.querySelector('textarea[name="input"]').value = '';
                 currentmsg = appendOutput("", false, true);
                 fetch('/', {
@@ -420,6 +442,7 @@
                         document.querySelector('textarea[name="input"]').value = '';
                     }
                     loadingSpinner.style.display = 'none'; // Hide loading spinner
+                    spinnerWrapper.classList.remove('loading'); // Remove 'loading' class from spinner wrapper
                     outputDiv.scrollTop = outputDiv.scrollHeight;
                     adjustOutputContainerHeight();
 
@@ -514,12 +537,14 @@
         });
 
         window.addEventListener('resize', adjustOutputContainerHeight);
+        new ResizeObserver(adjustOutputContainerHeight).observe(textArea);
 
         function adjustOutputContainerHeight() {
             const messages = document.querySelectorAll('.assistant-output, .user-input');
             const messagesCount = messages.length;
             const messageHeight = 50; // Approximate height of a single message
-            outputDiv.style.height = `${window.innerHeight - 100}px`;
+            const availableHeight = window.innerHeight - textArea.offsetHeight - 62;
+            outputDiv.style.height = `${availableHeight}px`;
         }
         function adjustTextareaHeight() {
             var sendButton = document.querySelector('.btn-primary');
