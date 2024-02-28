@@ -9,6 +9,7 @@ import time
 import json
 from PIL import Image
 import html
+from copy import deepcopy
 
 if Shared_vars.config.enabled_features["file_input"]["enabled"]:
     from FileHandler import handleFile
@@ -53,10 +54,11 @@ today = datetime.date.today()
 def stream():
     def generate():
         while True:
+            ct = deepcopy(currenttoken)
             yield f"data: {json.dumps(chosenfunc)}\n\n"
             yield f"data: {json.dumps(currenttoken)}\n\n"
-            for k in list(currenttoken.keys()):
-                if currenttoken[k].get("token").endswith("</s><s>"):
+            for k in ct.keys():
+                if ct[k].get("token").endswith("</s><s>"):
                     del currenttoken[k]
             time.sleep(0.5)
 
