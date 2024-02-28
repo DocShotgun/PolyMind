@@ -73,6 +73,15 @@ def remove_message():
         return jsonify({"status": "success"}), 200
     except IndexError:
         return jsonify({"status": "error", "message": "Invalid index"}), 400
+    
+
+@app.route("/clear_chat", methods=["GET"])
+def clear_chat():
+    Shared_vars.mem[f"{request.remote_addr}"] = []
+    Shared_vars.vismem[f"{request.remote_addr}"] = []
+    if request.remote_addr in Shared_vars.loadedfile:
+        Shared_vars.loadedfile[request.remote_addr] = {}
+    return jsonify({"status": "success"}), 200
 
 
 @app.route("/", methods=["GET", "POST"])
