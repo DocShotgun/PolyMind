@@ -16,9 +16,9 @@
         </div>
       </div>
       <link rel="stylesheet" href="{{ url_for('static', filename='node_modules/@highlightjs/cdn-assets/styles/default.min.css')}}">
-      <link rel="stylesheet" href="{{ url_for('static', filename='node_modules/bootstrap/dist/css/bootstrap.min.css')}}">
-      <style>
-        .splash-container {
+      <link rel="stylesheet" href="{{ url_for('static', filename='node_modules/bootstrap/dist/css/bootstrap.min.css')}}">   
+      <link rel="stylesheet" href="./styles.css">
+      <style>.splash-container {
         position: fixed;
         top: 0;
         left: 0;
@@ -31,12 +31,12 @@
         align-items: center;
         animation: fadeOut 2s forwards;
         }
-
+      
         .square-container {
         display: flex;
         flex-direction: column;
         }
-
+      
         .splash-logo {
         width: 100px;
         height: 100px;
@@ -45,16 +45,16 @@
         stroke-width: 0;
         animation: squareToTriangle 2s forwards;
         }
-
+      
         .splash-text {
         margin-top: 20px;
         }
-
+      
         .splash-text h1 {
         font-size: 2rem;
         font-weight: bold;
         }
-
+      
         .splash-text p {
         font-size: 1.2rem;
         }
@@ -69,8 +69,8 @@
             points: 0,0 100,0 50,100;
         }
         }
-
-
+      
+      
         @keyframes fadeOut {
         0% {
             opacity: 1;
@@ -81,7 +81,7 @@
             visibility: hidden;
         }
         }
-
+      
         .chat-container {
             padding: 20px;
             border: 1px solid #ddd;
@@ -115,12 +115,15 @@
         }
         .input-group {
             display: flex;
+            flex-wrap: nowrap;
             align-items: center;
+            justify-content: space-between;
+            gap: 5px;
         }
         .loading-spinner {
             display: none;
         }
-
+      
         .spinner-border {
             width: 2rem;
             height: 2rem;
@@ -129,7 +132,7 @@
             border-radius: 50%;
             animation: rotate 1s linear infinite;
         }
-
+      
         .input-wrapper {
             flex-grow: 1;
             margin-right: 5px;
@@ -138,15 +141,17 @@
             resize: vertical;
             max-height: 200px;
         }
-
+      
         .spinner-wrapper {
             display: flex;
             align-items: center;
+            position: absolute;
         }
+
         .spinner-wrapper.loading {
             margin-right: 10px;
         }
-
+      
         @keyframes rotate {
         0% {
             transform: rotate(0deg);
@@ -155,11 +160,11 @@
             transform: rotate(360deg);
         }
         }
-
+      
         .button-spacing {
             margin-right: 5px;
         }
-
+      
         code {
             padding: 5px;
             border-radius: 5px;
@@ -182,13 +187,13 @@
             vertical-align: middle; /* to align it with the text */
             transform: rotate(-90deg);
         }
-
+      
         .circle-bg {
             fill: none;
             stroke: #eee;
             stroke-width: 0.6em; /* increased for visibility */
         }
-
+      
         .circle {
             fill: none;
             stroke: #3498db;
@@ -198,14 +203,28 @@
             animation: fill 6s infinite alternate ease-in-out;
         }
 
+        .buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn {
+            height: 38px;
+        }
+
+        @media screen and (min-width: 320px) and (max-width: 480px) {
+            .btn {
+                font-size: 12px;
+                padding: 8px;
+            }
+        }
+      
         @keyframes fill {
             to {
                 stroke-dashoffset: 0;
             }
         }
-        
-    </style>
-    
+        </style>
 </head>
 <body>
     <div class="container-fluid chat-container">
@@ -226,21 +245,24 @@
                         <div class="input-wrapper">
                             <textarea name="input" class="form-control input-maxheight" placeholder="Type your message here..." autocomplete="off"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary button-spacing">Send</button>
-                        <button type="button" class="btn btn-secondary button-spacing" id="upload-image-button">File</button>
-                        <button type="button" class="btn btn-danger" id="clear-button">Clear</button>
-                          
+                        <div class="buttons">
+                            <button type="submit" class="btn btn-primary">Send</button>
+                            <button type="button" class="btn btn-secondary " id="upload-image-button">File</button>
+                            <button type="button" class="btn btn-danger" id="clear-button">Clear</button>
+                        </div>
                     </div>
                 </form>
-                
             </div>
         </div>
     </div>
+
     <script src="{{ url_for('static', filename='node_modules/bootstrap/dist/js/bootstrap.min.js')}}"></script>
     <script src="{{ url_for('static', filename='node_modules/marked/lib/marked.umd.js')}}"></script>
     <script src="{{ url_for('static', filename='node_modules/@highlightjs/cdn-assets/highlight.min.js')}}"></script>
     <script src="{{ url_for('static', filename='node_modules/marked-highlight/lib/index.umd.js')}}"></script>
     <script src="{{ url_for('static', filename='node_modules/darkreader/darkreader.js')}}"></script>
+
+    <!-- Stop -->
     <script>
         DarkReader.auto({
             brightness: 100,
@@ -425,7 +447,9 @@
             if (userInput != ""){
                 appendOutput(userInput.startsWith("//") ? userInput.slice(2) : userInput, true);
                 loadingSpinner.style.display = 'block'; // Show loading spinner
+                loadingSpinner.style.position = 'relative';
                 spinnerWrapper.classList.add('loading'); // Add 'loading' class to spinner wrapper
+                spinnerWrapper.style.position = 'relative';
                 document.querySelector('textarea[name="input"]').value = '';
                 currentmsg = appendOutput("", false, true);
                 fetch('/', {
